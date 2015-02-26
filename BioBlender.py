@@ -37,6 +37,12 @@ from .MLP_alternative_vcols import vcols_from_nearest_fi
 
 # ===== Fixes & Mods =================
 '''
+2015 / feb / 22
+- moved most tables to table_values.py dedicated file
+- fixed import of multiple conformations (was importing n-1)
+- fixed game engine invoke by renaming BioBlender2.py to BioBlender and
+  adjusting the reference in EmptySet.blend
+- for testing added alternative MLP vcol routine, though should use current temp pdb
 
 2015 / feb / 04
 - [added 'append_file_to_current_blend`] use instead of link_append
