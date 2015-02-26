@@ -1920,9 +1920,9 @@ class bb2_operator_atomic_mlp_alternative(types.Operator):
 		# model = nstr
 
 		# get location of pdb from last 4 chars... this will need to change.
-		# dir_name = os.path.dirname(__file__)
-		# test_molecule_path = os.path.join(dir_name, 'Test_molecules')
-		fp = r'C:\Users\dealga\Documents\GitHub\BioBlender\Test_molecules\02_4IHVonlyDNA.pdb'
+		dir_name = os.path.dirname(__file__)
+		print(dir_name)
+		fp = os.path.join(dir_name, 'tmp', 'original.pdb')
 		vcols_from_nearest_fi(self.model, 'SURFACE', fp)
 		print('finished')
 		return{'FINISHED'}
