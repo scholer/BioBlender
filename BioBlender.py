@@ -28,8 +28,12 @@ import copy
 # BioBlender Tables and Utils
 from .table_values import (
 	values_fi, 
-	molecules_structure	 # Define animoacids structure
+	molecules_structure,	 # Define animoacids structure
+	scale_vdw,
+	scale_cov
 )
+
+from .MLP_alternative_vcols import vcols_from_nearest_fi
 
 # ===== Fixes & Mods =================
 '''
@@ -208,12 +212,6 @@ color={C:[0.1,0.1,0.1], CA:[0.4,1.0,0.14], N:[0.24,0.41,0.7], O:[0.46,0.1,0.1], 
 dic_lipo_materials={}
 
 
-# Define atom scales [visual Van der Waals scale, collision radius scale]
-scale_vdw={C:[1.35,0.6], CA:[1.59,0.6], N:[1.23,0.6], O:[1.2,0.6], S:[1.43,0.6], P:[1.43,0.6], FE:[1.59,0.6], MG:[1.37,0.6], ZN:[1.1,0.6], CU:[1.1,0.6], NA:[1.8,0.6], K:[2.18,0.6], CL:[1.37,0.6], MN:[1.59,0.6], H:[0.95,0.3], F:[1.16, 0.6]}
-
-
-# Define atom scales [visual covalent scale, collision radius scale]
-scale_cov={C:[1.1,0.6], CA:[0.99,0.6], N:[1.07,0.6], O:[1.04,0.6], S:[1.46,0.6], P:[1.51,0.6], FE:[0.64,0.6], MG:[0.65,0.6], ZN:[0.74,0.6], CU:[0.72,0.6], NA:[0.95,0.6], K:[1.33,0.6], CL:[1.81,0.6], MN:[0.46,0.6], H:[0.53,0.3], F:[1.36, 0.6]}
 
 
 # ==================================================================================================================
@@ -1895,6 +1893,34 @@ class BB2_MLP_PANEL(types.Panel):
 			r = split.column()
 			r.scale_y = 2
 			r.operator("ops.bb2_operator_mlp_render")
+
+		# zeffii added testing. feb 26 2015
+		z = layout.column()
+		z.separator()
+		model_name = scene.BBModelRemark
+		z.label('testing options using: {0}'.format(model_name))
+		if model_name:
+			op = 'ops.bb2_operator_mlp_alternative'
+			z.operator(op, text='alternative mlp').model = model_name
+
+
+class bb2_operator_atomic_mlp_alternative(types.Operator):
+	bl_idname = "ops.bb2_operator_mlp_alternative"
+	bl_label = "Surface MLP alternative"
+	bl_description = "Surface MLP alterative using fi table"
+
+	model = bpy.props.StringProperty()
+	def execute(self, context):
+		# model = nstr
+
+		# get location of pdb from last 4 chars... this will need to change.
+		# dir_name = os.path.dirname(__file__)
+		# test_molecule_path = os.path.join(dir_name, 'Test_molecules')
+		fp = r'C:\Users\dealga\Documents\GitHub\BioBlender\Test_molecules\02_4IHVonlyDNA.pdb'
+		vcols_from_nearest_fi(self.model, 'SURFACE', fp)
+		print('finished')
+		return{'FINISHED'}
+bpy.utils.register_class(bb2_operator_atomic_mlp_alternative)
 
 
 class bb2_operator_atomic_mlp(types.Operator):
