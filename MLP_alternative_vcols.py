@@ -38,6 +38,31 @@ def get_vcol_layer(obj):
     return vcol_layer
 
 
+def generate_or_update(verts):
+    objs = bpy.data.objects
+    scene = bpy.context.scene
+    meshes = bpy.data.meshes
+
+    # -- get or create mesh
+    if "proxy_mesh" in meshes:
+        mesh = meshes["proxy_mesh"]
+    else:
+        mesh = meshes.new("proxy_mesh")
+
+    # -- inject mesh with verts
+    bm = bmesh_from_pyverts(verts)
+    bm.to_mesh(mesh)
+    bm.free()
+
+    # -- create or update object with new mesh data
+    if "proxy_obj" in objs:
+        obj = objs['proxy_obj']
+        obj.data = mesh
+    else:
+        obj = objs.new("proxy_obj", mesh)
+        scene.objects.link(obj)
+
+
 def get_specific_dict(filepath):
     '''
     This generates a dict from the .pdb to remap the specific elements in a chain
@@ -45,6 +70,12 @@ def get_specific_dict(filepath):
     {'OD2': 'O', 'CD1': 'C', 'CH2': 'C', 'CG': 'C', 'HH': 'H', 'HD13': 'H', etc.. }
     This is necessary for finding the radius of each element, when only the identifier
     of the specific position inside the chain is known.
+
+    This implementation expects an element name in the last column (76:78) it will fail
+    if that column is empty.
+
+    Alternative version that doesn't use the last column:
+    https://gist.github.com/zeffii/5aa56e22193ef6fff7ce
     '''
     s_dict = {}
 
@@ -90,32 +121,9 @@ def vcols_from_nearest_fi(nstr, surface_obj_name, fp):
 
     ## aliasing
     objs = bpy.data.objects
-    texts = bpy.data.texts
-    scene = bpy.context.scene
-    meshes = bpy.data.meshes
     children = objs[nstr].children
 
     sd = get_specific_dict(filepath=fp)
-
-    def generate_or_update(verts):
-        # -- get or create mesh
-        if "proxy_mesh" in meshes:
-            mesh = meshes["proxy_mesh"]
-        else:
-            mesh = meshes.new("proxy_mesh")
-
-        # -- inject mesh with verts
-        bm = bmesh_from_pyverts(verts)
-        bm.to_mesh(mesh)
-        bm.free()
-
-        # -- create or update object with new mesh data
-        if "proxy_obj" in objs:
-            obj = objs['proxy_obj']
-            obj.data = mesh
-        else:
-            obj = objs.new("proxy_obj", mesh)
-            scene.objects.link(obj)
 
     if not verts:
         # fill `proxy_obj` and `atom_fo_fi`

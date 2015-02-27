@@ -1877,13 +1877,14 @@ class BB2_MLP_PANEL(types.Panel):
 	bpy.types.Scene.BBMLPFormula = bpy.props.EnumProperty(attr="BBMLPFormula", name="Formula", description="Select a formula for MLP calculation", items=(("0", "Dubost", ""), ("1", "Testa", ""), ("2", "Fauchere", ""), ("3", "Brasseur", ""), ("4", "Buckingham", "")), default="1")
 	bpy.types.Scene.BBMLPGridSpacing = bpy.props.FloatProperty(attr="BBMLPGridSpacing", name="Grid Spacing", description="MLP Calculation step size (Smaller is better, but slower)", default=1, min=0.01, max=20, soft_min=1.4, soft_max=10)
 	bpy.types.Scene.BBAtomicMLP = bpy.props.BoolProperty(attr="BBAtomicMLP", name="Atomic MLP", description = "Atomic MLP", default=False)
+	
 	def draw(self, context):
 		scene = context.scene
 		layout = self.layout
 		r = layout.row()
 		r.prop(scene, "BBAtomic", expand=True)
 		r = layout.row()
-		if(bpy.context.scene.BBAtomic == "0"):
+		if (bpy.context.scene.BBAtomic == "0"):
 			r.prop(scene, "BBAtomicMLP")
 			r = layout.row()
 			r.operator("ops.bb2_operator_atomic_mlp")
@@ -1901,14 +1902,15 @@ class BB2_MLP_PANEL(types.Panel):
 			r.scale_y = 2
 			r.operator("ops.bb2_operator_mlp_render")
 
-		# zeffii added testing. feb 26 2015
-		z = layout.column()
-		z.separator()
-		model_name = scene.BBModelRemark
-		z.label('testing options using: {0}'.format(model_name))
-		if model_name:
-			op = 'ops.bb2_operator_mlp_alternative'
-			z.operator(op, text='Direct MLP mapping').model = model_name
+		if scene.BBAtomic == "1":  # SURFACE
+			# zeffii added testing. feb 26 2015
+			z = layout.column()
+			z.separator()
+			model_name = scene.BBModelRemark
+			z.label('testing options using: {0}'.format(model_name))
+			if model_name:
+				op = 'ops.bb2_operator_mlp_alternative'
+				z.operator(op, text='Direct MLP mapping').model = model_name
 
 
 class bb2_operator_atomic_mlp_alternative(types.Operator):
