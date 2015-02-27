@@ -802,10 +802,15 @@ def core_sort_hr():
 
 def core_createModels():
 	print("core_create_Models")
+
 	# Empty creation
 	bpy.ops.object.empty_add(type='PLAIN_AXES')
+
 	bpy.context.scene.objects.active.name = copy.copy(str(bpy.context.scene.BBModelRemark))
 	parentEmpty = bpy.data.objects[str(bpy.context.scene.BBModelRemark)]
+
+	# at this point the parent Empty will be called pdbname[-8:-4]
+
 	bpy.context.scene.objects.active.bb2_pdbID = copy.copy(str(pdbID))
 	bpy.context.scene.objects.active.bb2_objectType = "PDBEMPTY"
 	bpy.context.scene.objects.active.bb2_outputOptions = "1"
@@ -900,13 +905,15 @@ def core_createModels():
 						# Adding constraints, using atom position to correctly orient hinge x axis
 						obj = bpy.data.objects[entry]
 						nextEntry = bpy.data.objects[mainChainCache[i+1]]
-						#line=tmpModel[0][entry]
+
 						line=tmpModel[entry]
 						obj.location=line.get("loc")
-						#line=tmpModel[0][mainChainCache[i+1]]
+
 						line=tmpModel[mainChainCache[i+1]]
 						nextEntry.location=line.get("loc")
+
 						addRigidBodyRotamer(obj,nextEntry)
+
 				#bonds for Nucleic Acids
 				cacheSize = len(mainChainCache_Nucleic_Filtered) - 1
 				for i, entry in enumerate(mainChainCache_Nucleic_Filtered):
@@ -915,13 +922,15 @@ def core_createModels():
 						# Adding constraints, using atom position to correctly orient hinge x axis
 						obj = bpy.data.objects[entry]
 						nextEntry = bpy.data.objects[mainChainCache_Nucleic_Filtered[i+1]]
-						#line=tmpModel[0][entry]
+
 						line=tmpModel[entry]
 						obj.location=line.get("loc")
-						#line=tmpModel[0][mainChainCache_Nucleic_Filtered[i+1]]
+
 						line=tmpModel[mainChainCache_Nucleic_Filtered[i+1]]
 						nextEntry.location=line.get("loc")
+
 						addRigidBodyRotamer(obj,nextEntry)	
+
 				chainCache = sorted(chainCache.items())
 				for entry in chainCache:
 					line = entry[1].split("#")
@@ -947,13 +956,15 @@ def core_createModels():
 							print("TargetKey not set, will skip Rigid Body Joint")
 						else:
 							obj = bpy.data.objects[entry[0]]
-							#line=tmpModel[0][entry[0]]
+
 							line=tmpModel[entry[0]]
 							obj.location=line.get("loc")
-							#line=tmpModel[0][targetKey]
+
 							line=tmpModel[targetKey]
 							nextEntry.location=line.get("loc")
+
 							addRigidBodyRotamer(obj,bpy.data.objects[targetKey])
+
 				chainCache = sorted(chainCache_Nucleic.items())
 				for entry in chainCache:
 					line = entry[1].split("#")
@@ -979,11 +990,15 @@ def core_createModels():
 							print("TargetKey not set, will skip Rigid Body Joint")
 						else:
 							obj = bpy.data.objects[entry[0]]
+
 							line = tmpModel[entry[0]]
 							obj.location=line.get("loc")
+
 							line = tmpModel[targetKey]
 							nextEntry.location=line.get("loc")
+
 							addRigidBodyRotamer(obj,bpy.data.objects[targetKey])	
+
 			except Exception as E:
 				raise Exception ("Unable to generate all bonds and constraints:", E)
 		# for all models, insert key frame
