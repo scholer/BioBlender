@@ -42,6 +42,7 @@ from .MLP_alternative_vcols import vcols_from_nearest_fi
 - 	fixed import of multiple conformations (was importing n-1)
 - 	fixed game engine invoke by renaming BioBlender2.py to BioBlender and
 	adjusting the reference in EmptySet.blend
+-	adjusted trajectories origin radii, min/max it was too large 
 - 	for testing added alternative MLP vcol routine, though should use current temp pdb
 
 2015 / feb / 04
