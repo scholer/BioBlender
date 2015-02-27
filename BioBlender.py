@@ -1907,7 +1907,7 @@ class BB2_MLP_PANEL(types.Panel):
 		z.label('testing options using: {0}'.format(model_name))
 		if model_name:
 			op = 'ops.bb2_operator_mlp_alternative'
-			z.operator(op, text='alternative mlp').model = model_name
+			z.operator(op, text='Direct MLP mapping').model = model_name
 
 
 class bb2_operator_atomic_mlp_alternative(types.Operator):
