@@ -801,12 +801,14 @@ def core_sort_hr():
 
 
 def core_createModels():
-	print("core_create_Models")
+	print("core_createModels()")
 
 	# Empty creation
 	bpy.ops.object.empty_add(type='PLAIN_AXES')
 
 	bpy.context.scene.objects.active.name = copy.copy(str(bpy.context.scene.BBModelRemark))
+	MTREF = bpy.context.scene.objects.active
+	print('empty name:', MTREF.name)
 	parentEmpty = bpy.data.objects[str(bpy.context.scene.BBModelRemark)]
 
 	# at this point the parent Empty will be called pdbname[-8:-4]
@@ -865,6 +867,10 @@ def core_createModels():
 			# (count - 1) because there is the original template object.
 			for i in range(len(model)-1):
 				bpy.ops.object.duplicate(linked = True, mode='DUMMY')
+
+			print('before Major enumeration : empty name:', MTREF.name)
+
+			# Major enumeration
 			try:
 				# walk through list of objects and set name, location and material for each atom
 				for i, obj in enumerate(bpy.data.objects):
@@ -1019,8 +1025,8 @@ def core_createModels():
 			# advance frame
 			bpy.context.scene.frame_end = curFrame
 			curFrame += bpy.context.scene.BBDeltaFrame
-	core_EmptyChainsCreation()
 
+	core_EmptyChainsCreation()
 
 
 # lookup sidechain parents
