@@ -34,6 +34,7 @@ from .table_values import (
 )
 
 from .MLP_alternative_vcols import vcols_from_nearest_fi
+from .debug_helpers import write_json_of_pdbtree
 
 # ===== Fixes & Mods =================
 '''
@@ -826,15 +827,8 @@ def core_createModels():
 	# Build 3D scene from pdbIDmodelsDictionary
 
 	DEBUG = False
-
-	# write the dict to disc for debug
 	if DEBUG:
-		import json
-		this_root = os.path.dirname(__file__)
-		destination_path = os.path.join(this_root, 'tmp', 'PDB_tree.json')
-		m = json.dumps(pdbIDmodelsDictionary, sort_keys=True, indent=2)
-		with open(destination_path, 'w') as PDB_tree:
-			PDB_tree.writelines(m)
+		write_json_of_pdbtree(pdbIDmodelsDictionary)
 
 	# pdbID references a specific model.
 	# that model's dict it returned by pdbIDmodelsDictionary[pdbID]
