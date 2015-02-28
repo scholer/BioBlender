@@ -805,30 +805,31 @@ def core_createModels():
 	print("core_createModels()")
 
 	# Empty creation
-	bpy.ops.object.empty_add(type='PLAIN_AXES')
+	D = bpy.data
+	scn = bpy.context.scene
 
-	bpy.context.scene.objects.active.name = copy.copy(str(bpy.context.scene.BBModelRemark))
-	MTREF = bpy.context.scene.objects.active
-	print('empty name:', MTREF.name)
-	parentEmpty = bpy.data.objects[str(bpy.context.scene.BBModelRemark)]
+	mt_name = bpy.context.scene.BBModelRemark
+	parentEmpty = D.objects.new(mt_name, None)
+	parentEmpty.location = (0.0, 0.0, 0.0)
+	scn.objects.link(parentEmpty)
+	scn.update()
 
-	# at this point the parent Empty will be called pdbname[-8:-4]
-
-	bpy.context.scene.objects.active.bb2_pdbID = copy.copy(str(pdbID))
-	bpy.context.scene.objects.active.bb2_objectType = "PDBEMPTY"
-	bpy.context.scene.objects.active.bb2_outputOptions = "1"
-	bpy.context.scene.objects.active.bb2_pdbPath = copy.copy(str(bpy.context.scene.BBImportPath))
-	bpy.data.objects[str(bpy.context.scene.BBModelRemark)].location = ((0.0, 0.0, 0.0))
+	# at this point the parent Empty will be called pdbname [-8:-4]
+	parentEmpty.bb2_pdbID = copy.copy(str(pdbID))
+	parentEmpty.bb2_objectType = "PDBEMPTY"
+	parentEmpty.bb2_outputOptions = "1"
+	parentEmpty.bb2_pdbPath = copy.copy(str(bpy.context.scene.BBImportPath))
 
 	global chainCache
 	global curFrame
-	id = bpy.context.scene.BBModelRemark
+	_id = bpy.context.scene.BBModelRemark
 	curFrame = 1
-	# Build 3D scene from pdbIDmodelsDictionary
 
 	DEBUG = False
 	if DEBUG:
 		write_json_of_pdbtree(pdbIDmodelsDictionary)
+
+	'''Build 3D scene from pdbIDmodelsDictionary'''
 
 	# pdbID references a specific model.
 	# that model's dict is returned by pdbIDmodelsDictionary[pdbID]
@@ -857,19 +858,17 @@ def core_createModels():
 			# select and temporary rename template atom
 			bpy.data.objects["atom"].hide = False
 			bpy.data.objects["atom"].select = True
-			bpy.data.objects["atom"].name = str(id)
+			bpy.data.objects["atom"].name = str(_id)
 			# (count - 1) because there is the original template object.
 			for i in range(len(model)-1):
 				bpy.ops.object.duplicate(linked = True, mode='DUMMY')
-
-			print('before Major enumeration : empty name:', MTREF.name)
 
 			# Major enumeration
 			try:
 				# walk through list of objects and set name, location and material for each atom
 				for i, obj in enumerate(bpy.data.objects):
 					# if the object is the one of those we just created (i.e. if name matches xx.0000)
-					if (obj.name.split(".")[0] == id) and (obj.type=="MESH"):
+					if (obj.name.split(".")[0] == _id) and (obj.type=="MESH"):
 						# descructively walk through the modelCopy varible
 						entry = modelCopy.popitem()
 						# assign obj name, material, etc.  object Locations are assigned later
