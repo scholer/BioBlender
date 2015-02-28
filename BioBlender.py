@@ -831,7 +831,7 @@ def core_createModels():
 		write_json_of_pdbtree(pdbIDmodelsDictionary)
 
 	# pdbID references a specific model.
-	# that model's dict it returned by pdbIDmodelsDictionary[pdbID]
+	# that model's dict is returned by pdbIDmodelsDictionary[pdbID]
 	# m is the key, into that model's dictionary it will return a conformation of that model
 	# the keys are unsorted.
 	for m in pdbIDmodelsDictionary[pdbID]:
