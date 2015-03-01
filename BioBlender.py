@@ -808,8 +808,8 @@ def core_createModels():
 	D = bpy.data
 	scn = bpy.context.scene
 
-	mt_name = bpy.context.scene.BBModelRemark
-	parentEmpty = D.objects.new(mt_name, None)
+	_id = bpy.context.scene.BBModelRemark
+	parentEmpty = D.objects.new(_id, None)
 	parentEmpty.location = (0.0, 0.0, 0.0)
 	scn.objects.link(parentEmpty)
 	scn.update()
@@ -822,7 +822,6 @@ def core_createModels():
 
 	global chainCache
 	global curFrame
-	_id = bpy.context.scene.BBModelRemark
 	curFrame = 1
 
 	DEBUG = False
@@ -859,6 +858,7 @@ def core_createModels():
 			bpy.data.objects["atom"].hide = False
 			bpy.data.objects["atom"].select = True
 			bpy.data.objects["atom"].name = str(_id)
+
 			# (count - 1) because there is the original template object.
 			for i in range(len(model)-1):
 				bpy.ops.object.duplicate(linked = True, mode='DUMMY')
@@ -1019,6 +1019,9 @@ def core_createModels():
 			bpy.context.scene.frame_end = curFrame
 			curFrame += bpy.context.scene.BBDeltaFrame
 
+	# force pdb empty name to model remark, an ugly fix.
+	parentEmpty.name = str(_id)
+
 	core_EmptyChainsCreation()
 
 
@@ -1080,10 +1083,8 @@ def bondLookUp(atom, amac):
 
 def bondLookUp_NucleicMain(atom, amac): # define skeleton atoms
 	print("entrati nel bondlookupnucleicmain")
-	print("atom")
-	print(str(atom))
-	print("amac")
-	print(str(amac))
+	print("atom:", str(atom))
+	print("amac:", str(amac))
 	print("---calculating----")
 	if(atom=="O4\'"): parent = ["C4\'", C]
 	elif(atom=="C2\'"): parent = ["C3\'", C]
@@ -1113,9 +1114,9 @@ def bondLookUp_NucleicMain(atom, amac): # define skeleton atoms
 	elif(atom=="N2" or atom=="O2"): parent = ["C2", C]
 	elif(atom=="N4" or atom=="O4"): parent = ["C4", C]
 	elif(atom=="C7"): parent = ["C5", C]
-	print("parent")
-	print(str(parent))
-	print("returned")
+	# print("parent")
+	# print(str(parent))
+	# print("returned")
 	return parent
 
 
