@@ -1019,10 +1019,13 @@ def core_createModels():
 			bpy.context.scene.frame_end = curFrame
 			curFrame += bpy.context.scene.BBDeltaFrame
 
+
 	# force pdb empty name to model remark, an ugly fix.
+	# not sure if this should be done before or after core_Empty
 	parentEmpty.name = str(_id)
 
 	core_EmptyChainsCreation()
+
 
 
 # lookup sidechain parents
