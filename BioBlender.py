@@ -1149,6 +1149,7 @@ def addRigidBodyRotamer(objectparent,objecttarget) :
 
 def core_EmptyChainsCreation():
 	print("Empty Chains creation")
+	print('current number of objects:', len(bpy.data.objects))
 	chainsList = []
 	for o in bpy.data.objects:
 		if(o.bb2_pdbID == pdbID):
@@ -1179,6 +1180,7 @@ def core_EmptyChainsCreation():
 							if(c.bb2_objectType == "CHAINEMPTY"):
 								if(c.bb2_subID == tmpChain):
 									o.parent = bpy.data.objects[str(c.name)]
+	print('end core_EmptyChainsCreation() current number of objects:', len(bpy.data.objects))
 	core_cleaningUp()
 
 
