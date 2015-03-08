@@ -63,7 +63,7 @@ def append_file_to_current_blend(Path, objName, Directory):
 
 	print('appending file')
 	wm = bpy.ops.wm
-	# if hasattr(wm, 'link_append'):
+
 	if 'link_append' in dir(wm):
 		wm.link_append(filepath=Path, filename=objName, directory=Directory, link=False)
 	else:
@@ -852,9 +852,12 @@ def core_createModels():
 			bpy.data.objects["atom"].select = True
 			bpy.data.objects["atom"].name = str(_id)
 
-			# (count - 1) because there is the original template object.
+			print('starting atom duplication')
 			for i in range(len(model)-1):
 				bpy.ops.object.duplicate(linked = True, mode='DUMMY')
+
+			print('starting rigging..may take a while')
+			print('-')
 
 			# Major enumeration
 			try:
@@ -875,6 +878,7 @@ def core_createModels():
 						obj.BBInfo = str(entry[1])
 						obj.bb2_pdbID = copy.copy(str(pdbID))
 						obj.bb2_objectType = "ATOM"
+						
 						# Setting EMPTY as parent for this object
 						obj.select = True
 						obj.parent = bpy.data.objects[str(parentEmpty.name)]
