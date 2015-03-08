@@ -30,7 +30,8 @@ from .table_values import (
 	values_fi, 
 	molecules_structure,	 # Define animoacids structure
 	scale_vdw,
-	scale_cov
+	scale_cov,
+	color
 )
 
 from .MLP_alternative_vcols import vcols_from_nearest_fi
@@ -1085,10 +1086,11 @@ def bondLookUp(atom, amac):
 
 
 def bondLookUp_NucleicMain(atom, amac): # define skeleton atoms
-	print("entrati nel bondlookupnucleicmain")
-	print("atom:", str(atom))
-	print("amac:", str(amac))
-	print("---calculating----")
+	if False:
+		print("entrati nel bondlookupnucleicmain")
+		print("atom:", str(atom))
+		print("amac:", str(amac))
+		print("---calculating----")
 	if(atom=="O4\'"): parent = ["C4\'", C]
 	elif(atom=="C2\'"): parent = ["C3\'", C]
 	elif(atom=="O2\'"): parent = ["C2\'", C]
